@@ -38,6 +38,26 @@ window.model = {
             } 
             else 
         	    return mTermValue; 
+        } 
+        else if (this.mExpr.length > 0 && this.mExpr.charAt(0) == this.mSub) {
+            
+            this.mExpr = this.mExpr.substring(1);
+  
+            mTermValue = mTermValue + (-1)*this.evalTerm();
+
+            if (this.mExpr.length > 0) { // for expression like a*b - c + d*e
+
+                if (this.mExpr.charAt(0) == this.mSub) {
+                    this.mExpr = this.mExpr.substring(1);
+                    return mTermValue - this.evalExpr();
+                }
+                else if (this.mExpr.charAt(0) == this.mAdd) {
+                    this.mExpr = this.mExpr.substring(1);
+                    return mTermValue + this.evalExpr();
+                }
+                //else
+                    //throw new IOException(this.mExpr);
+            }
         }
         return mTermValue;
 	},
@@ -56,14 +76,14 @@ window.model = {
                 this.mExpr = this.mExpr.substring(1);
                 var mDivisor = this.evalTerm();
                 if (mDivisor == 0)
-                    throw new ArithmeticException();
+                    throw new IOException(this.mExpr);
                 return mFactor / mDivisor;
             }
             else if (this.mExpr.charAt(0) == this.mMod) {
                 this.mExpr = this.mExpr.substring(1);
                 var mDivisor = this.evalFactor();
                 if (mDivisor == 0)
-                    throw new ArithmeticException();
+                    throw new IOException();
                 mFactor = mFactor % mDivisor;
                 return this.evalHPTerm(mFactor);
             }
@@ -85,10 +105,8 @@ window.model = {
         var len = 0;
     	if (this.mExpr.length > 0) {
             if ((this.mExpr.charAt(0) >= this.mZero && this.mExpr.charAt(0) <= this.mNine) || this.mExpr.charAt(0) == this.mDot) {
-                numb = this.mExpr.match("[0-9]+(\.[0-9]*)?");
-                //Matcher mNumb = pNumber.matcher(this.mExpr);
-                //if (mNumb.find()) {
-                  //  numb = mNumb.group();
+                numb = this.mExpr.match("[0-9]*\\.?[0-9]+");
+                
                 console.log(numb);
                 mNumber = parseFloat(numb);
                 console.log(mNumber);
@@ -96,23 +114,26 @@ window.model = {
 
                 //while(this.mExpr[len]==numb[len])
                   //  len = len + 1;
-                if (this.mExpr.length == numb.length) {
+                if (this.mExpr.length == numb[0].length) {
                     console.log("mExpr equals numb length");
                     this.mExpr = "";
                 }
                 else {
-                    console.log(numb.length);
-                    this.mExpr = this.mExpr.substring(numb.length);
+                    console.log(numb[0].length);
+                    this.mExpr = this.mExpr.substring(numb[0].length);
                     console.log(this.mExpr);
 
                 }
                 console.log(mNumber);
                 return mNumber;
             }
-            else if (this.mExpr.charAt(0) == mOpBrckt) {
+            else if (this.mExpr.charAt(0) == this.mOpenBrckt) {
                 this.mExpr = this.mExpr.substring(1);
+                console.log(this.mExpr);
                 mNumber = this.evalExpr();
-                if (this.mExpr.charAt(0) == mClBrckt) {
+                console.log("return to mOpenBrckt");
+                if (this.mExpr.charAt(0) == this.mClBrckt) {
+                    console.log(this.mExpr);
                     this.mExpr = this.mExpr.substring(1);
                     return mNumber;
                 }
@@ -126,7 +147,7 @@ window.model = {
     
     evalHPTerm: function(mFactor) {
         console.log("Entering evalHPTerm");
-    	if (this.mExpr.length() > 0) {
+    	if (this.mExpr.length > 0) {
             if (this.mExpr.charAt(0) == this.mAdd) {
                 this.mExpr = this.mExpr.substring(1);
                 return mFactor + this.evalExpr();
@@ -134,7 +155,7 @@ window.model = {
             else if (this.mExpr.charAt(0) == this.mSub) {
                 this.mExpr = this.mExpr.substring(1);
                 mFactor = mFactor + (-1)*this.evalTerm();
-                if (this.mExpr.length() > 0) {
+                if (this.mExpr.length > 0) {
                     if (this.mExpr.charAt(0) == this.mAdd) {
                         this.mExpr = this.mExpr.substring(1);
                         return mFactor + this.evalExpr();
@@ -155,14 +176,14 @@ window.model = {
                 this.mExpr = this.mExpr.substring(1);
                 var mDivisor = this.evalTerm();
                 if (mDivisor == 0)
-                    throw new ArithmeticException();
+                    throw new IOException();
                 return mFactor / mDivisor;
             }
             else if (this.mExpr.charAt(0) == this.mMod) {
                 this.mExpr = this.mExpr.substring(1);
                 var mDivisor = this.evalFactor();
                 if (mDivisor == 0)
-                    throw new ArithmeticException();
+                    throw new IOException();
                 mFactor = mFactor % mDivisor;
                     return this.evalHPTerm(mFactor);
             }
@@ -234,9 +255,24 @@ window.view = {
     },
 
     setFinalExpression: function(id) {
-    	model.mExpr = this.getInnerHTML(id);
-        var finalValue = model.evalExpr();
-        document.getElementById(id).innerHTML = finalValue;
+        try {
+            model.mExpr = this.getInnerHTML(id);
+            var finalValue = model.evalExpr();
+            document.getElementById(id).innerHTML = finalValue;
+        } 
+        /*catch (ArithmeticException) {
+            document.getElementById(id).innerHTML = "NaN";
+        } */
+        catch (IOException) {
+            if(model.mExpr.length == 0)
+                document.getElementById(id).innerHTML = "NaN";
+            else
+                document.getElementById(id).innerHTML = "Invalid Expression";
+        }
+        /*catch (e) {
+            document.getElementById(id).innerHTML = "Undefined";
+        }*/
+
     },
 
     getInnerHTML: function (id) {
