@@ -247,11 +247,11 @@ window.view = {
     },
 
     setInnerHTMLOneByX: function(id) {
-	    document.getElementById(id).innerHTML = '1/(' + this.getInnerHTML(id) + ')';
+        document.getElementById(id).innerHTML = '1/(' + this.getInnerHTML(id) + ')';
     },
 
     setInnerHTMLUnary: function(id) {
-   	    document.getElementById(id).innerHTML = '-(' + this.getInnerHTML(id) + ')';
+        document.getElementById(id).innerHTML = '-(' + this.getInnerHTML(id) + ')';
     },
 
     setInnerHTMLBackspace: function(id) {
