@@ -3,9 +3,21 @@
 // Email: dharmeet@vlabs.ac.in   |
 //-------------------------------+
 
+//----------------------------------------------------------------------------------------+
+// The validation and evaluation of expression is done, according to regular expressions  |
+// similar to the following:                                                              |
+// E -----> E + T | E - T | T                                                             | 
+// T -----> T * F | T / F | F                                                             |
+// F -----> (E) | n                                                                       |
+// E - Expression, T - Term, F - Factor and n - Number                                    |
+// We have three functions evalExpr(), evalTerm() and evalFactor, and as we also have     |
+// modulus and exponent function in the calculator so we need evalHPTerm(), as '^' and '%'|
+// has higher precendence than multiply and divide.                                       |
+//----------------------------------------------------------------------------------------+
+
 window.model = {
 	
-    mAdd: '+',
+    mAdd: '+',    // property for constant characters
     mSub: '-',
     mMul: '*',
     mDiv: '/',
@@ -16,10 +28,10 @@ window.model = {
     mZero: '0',
     mNine: '9',
     mDot: '.',
-    mExpr: '',
+    mExpr: '',   // property to store the expression associated with this object
 
+    // Function to implement the regular expression E -----> E + T | E - T | T
     evalExpr: function() {
-        console.log("Entering evalExpr");
         var mTermValue = this.evalTerm();
 
         if (this.mExpr.length > 0 && this.mExpr.charAt(0) == this.mAdd) {
@@ -58,6 +70,7 @@ window.model = {
         return mTermValue;
 	},
 
+    // Function to implement the expression T -----> T * F | T / F | F
     evalTerm: function() {
         console.log("Entering evalTerm");
         var mFactor = this.evalFactor();
@@ -94,6 +107,7 @@ window.model = {
         return mFactor;
     },
 
+    // Function to implement the expression F -----> ( E ) | n 
     evalFactor: function() {
         console.log("Entering evalFactor");
         var mNumber;
@@ -136,6 +150,7 @@ window.model = {
         throw new IOException(this.mExpr);
     },
     
+    // Function to take care of expressions like a*b^c where ^ has higher precedence then *
     evalHPTerm: function(mFactor) {
         console.log("Entering evalHPTerm");
         if (this.mExpr.length > 0) {
@@ -252,9 +267,6 @@ window.view = {
 
             document.getElementById(id).innerHTML = finalValue;
         } 
-        /*catch (ArithmeticException) {
-            document.getElementById(id).innerHTML = "NaN";
-        } */
         catch (IOException) {
             if(model.mExpr.length == 0)
                 document.getElementById(id).innerHTML = "NaN";
@@ -265,13 +277,11 @@ window.view = {
                 var mInvalidExpression = mFinalExpression.substring(invalidStartIndex);
                 
                 mFinalExpression = mFinalExpression.substring(0, invalidStartIndex);
-                document.getElementById(id).innerHTML = mFinalExpression + '<span style="color: #FF0000;">' + mInvalidExpression + '</span>';
+                document.getElementById(id).innerHTML = mFinalExpression + '<span 
+                style="color: #FF0000; font-size: 17px;">' + mInvalidExpression + '</span>';
             }
                 
         }
-        /*catch (e) {
-            document.getElementById(id).innerHTML = "Undefined";
-        }*/
     },
 
     getInnerHTML: function (id) {
