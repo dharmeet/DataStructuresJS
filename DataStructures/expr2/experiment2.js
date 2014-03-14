@@ -63,10 +63,12 @@ window.model = {
                     this.mExpr = this.mExpr.substring(1);
                     return mTermValue + this.evalExpr();
                 }
-                //else
-                    //throw new IOException(this.mExpr);
+                else
+                    throw new IOException(this.mExpr);
             }
         }
+        else if (this.mExpr.length > 0 && this.mExpr.charAt(0) != this.mClBrckt)
+            throw new IOException(this.mExpr);
         return mTermValue;
 	},
 
@@ -275,10 +277,8 @@ window.view = {
                 var invalidStartIndex = mFinalExpression.indexOf(model.mExpr);
                 //document.getElementById("colorRed").style.color="#FF0000";
                 var mInvalidExpression = mFinalExpression.substring(invalidStartIndex);
-                
                 mFinalExpression = mFinalExpression.substring(0, invalidStartIndex);
-                document.getElementById(id).innerHTML = mFinalExpression + '<span 
-                style="color: #FF0000; font-size: 17px;">' + mInvalidExpression + '</span>';
+                document.getElementById(id).innerHTML = mFinalExpression + '<span style="color: #FF0000;">' + mInvalidExpression + '</span>';
             }
                 
         }
