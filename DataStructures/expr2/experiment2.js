@@ -258,6 +258,7 @@ window.view = {
         try {
             model.mExpr = this.getInnerHTML(id);
             var finalValue = model.evalExpr();
+
             document.getElementById(id).innerHTML = finalValue;
         } 
         /*catch (ArithmeticException) {
@@ -266,8 +267,16 @@ window.view = {
         catch (IOException) {
             if(model.mExpr.length == 0)
                 document.getElementById(id).innerHTML = "NaN";
-            else
-                document.getElementById(id).innerHTML = "Invalid Expression";
+            else {
+                var mFinalExpression = this.getInnerHTML(id);
+                var invalidStartIndex = mFinalExpression.indexOf(model.mExpr);
+                //document.getElementById("colorRed").style.color="#FF0000";
+                var mInvalidExpression = mFinalExpression.substring(invalidStartIndex);
+                
+                mFinalExpression = mFinalExpression.substring(0, invalidStartIndex);
+                document.getElementById(id).innerHTML = mFinalExpression + '<span style="color: #FF0000;">' + mInvalidExpression + '</span>';
+            }
+                
         }
         /*catch (e) {
             document.getElementById(id).innerHTML = "Undefined";
