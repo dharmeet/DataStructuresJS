@@ -18,14 +18,14 @@ window.model = {
     mDot: '.',
     mExpr: '',
 
-	evalExpr: function() {
+    evalExpr: function() {
         console.log("Entering evalExpr");
         var mTermValue = this.evalTerm();
 
         if (this.mExpr.length > 0 && this.mExpr.charAt(0) == this.mAdd) {
-        	this.mExpr = this.mExpr.substring(1);
-        	mTermValue = mTermValue + this.evalExpr();
-        	if (this.mExpr.length > 0) {
+            this.mExpr = this.mExpr.substring(1);
+            mTermValue = mTermValue + this.evalExpr();
+            if (this.mExpr.length > 0) {
         		if (this.mExpr.charAt(0) == this.mSub) {
         			this.mExpr = this.mExpr.substring(1);
         			return mTermValue - this.evalExpr();
