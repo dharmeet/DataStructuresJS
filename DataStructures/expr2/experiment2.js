@@ -5,17 +5,17 @@
 
 window.model = {
 	
-	mAdd: '+',
-	mSub: '-',
-	mMul: '*',
-	mDiv: '/',
+    mAdd: '+',
+    mSub: '-',
+    mMul: '*',
+    mDiv: '/',
     mExp: '^',
     mMod: '%',
     mClBrckt: ')',
-	mOpenBrckt: '(',
-	mZero: '0',
-	mNine: '9',
-	mDot: '.',
+    mOpenBrckt: '(',
+    mZero: '0',
+    mNine: '9',
+    mDot: '.',
     mExpr: '',
 
 	evalExpr: function() {
