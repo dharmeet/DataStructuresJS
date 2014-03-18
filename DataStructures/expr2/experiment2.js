@@ -10,7 +10,7 @@
 // T -----> T * F | T / F | F                                                             |
 // F -----> (E) | n                                                                       |
 // E - Expression, T - Term, F - Factor and n - Number                                    |
-// We have three functions evalExpr(), evalTerm() and evalFactor, and as we also have     |
+// We have three functions evalExpr(), evalTerm() and evalFactor(), and as we also have   |
 // modulus and exponent function in the calculator so we need evalHPTerm(), as '^' and '%'|
 // has higher precendence than multiply and divide.                                       |
 //----------------------------------------------------------------------------------------+
@@ -76,7 +76,6 @@ window.model = {
     evalTerm: function() {
         console.log("Entering evalTerm");
         var mFactor = this.evalFactor();
-
         if (this.mExpr.length > 0) {
            if (this.mExpr.charAt(0) == this.mMul) {
                 this.mExpr = this.mExpr.substring(1);
@@ -105,7 +104,6 @@ window.model = {
                 return this.evalHPTerm(mFactor);
             }
         }
-        console.log(mFactor);
         return mFactor;
     },
 
@@ -118,29 +116,20 @@ window.model = {
         if (this.mExpr.length > 0) {
             if ((this.mExpr.charAt(0) >= this.mZero && this.mExpr.charAt(0) <= this.mNine) || this.mExpr.charAt(0) == this.mDot) {
                 numb = this.mExpr.match("[0-9]*\\.?[0-9]+");
-                console.log(numb);
                 mNumber = parseFloat(numb);
-                console.log(mNumber);
-                
+                               
                 if (this.mExpr.length == numb[0].length) {
-                    console.log("mExpr equals numb length");
                     this.mExpr = "";
                 }
                 else {
-                    console.log(numb[0].length);
                     this.mExpr = this.mExpr.substring(numb[0].length);
-                    console.log(this.mExpr);
                 }
-                console.log(mNumber);
                 return mNumber;
             }
             else if (this.mExpr.charAt(0) == this.mOpenBrckt) {
                 this.mExpr = this.mExpr.substring(1);
-                console.log(this.mExpr);
                 mNumber = this.evalExpr();
-                console.log("return to mOpenBrckt");
                 if (this.mExpr.charAt(0) == this.mClBrckt) {
-                    console.log(this.mExpr);
                     this.mExpr = this.mExpr.substring(1);
                     return mNumber;
                 }
@@ -211,8 +200,6 @@ window.model = {
 window.view = {
 
     addClickEvent: function (id, method) {
-        //console.log('clicked');
-        //console.log(id);
         var element = document.getElementById(id);
         element.addEventListener('click', method, false);
     },
