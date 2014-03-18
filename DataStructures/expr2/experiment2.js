@@ -32,6 +32,7 @@ window.model = {
 
     // Function to implement the regular expression E -----> E + T | E - T | T
     evalExpr: function() {
+        console.log("Entering evalExpr" + this.mExpr);
         var mTermValue = this.evalTerm();
 
         if (this.mExpr.length > 0 && this.mExpr.charAt(0) == this.mAdd) {
@@ -74,7 +75,7 @@ window.model = {
 
     // Function to implement the expression T -----> T * F | T / F | F
     evalTerm: function() {
-        console.log("Entering evalTerm");
+        console.log("Entering evalTerm " + this.mExpr);
         var mFactor = this.evalFactor();
         if (this.mExpr.length > 0) {
            if (this.mExpr.charAt(0) == this.mMul) {
@@ -87,7 +88,8 @@ window.model = {
                 var mDivisor = this.evalTerm();
                 if (mDivisor == 0)
                     throw new IOException(this.mExpr);
-                return mFactor / mDivisor;
+                mFactor = mFactor / mDivisor;
+                return this.evalHPTerm(mFactor);
             }
             else if (this.mExpr.charAt(0) == this.mMod) {
                 this.mExpr = this.mExpr.substring(1);
@@ -109,7 +111,7 @@ window.model = {
 
     // Function to implement the expression F -----> ( E ) | n 
     evalFactor: function() {
-        console.log("Entering evalFactor");
+        console.log("Entering evalFactor " + this.mExpr);
         var mNumber;
         var numb = "";
         var len = 0;
@@ -143,7 +145,7 @@ window.model = {
     
     // Function to take care of expressions like a*b^c where ^ has higher precedence then *
     evalHPTerm: function(mFactor) {
-        console.log("Entering evalHPTerm");
+        console.log("Entering evalHPTerm " + this.mExpr);
         if (this.mExpr.length > 0) {
             if (this.mExpr.charAt(0) == this.mAdd) {
                 this.mExpr = this.mExpr.substring(1);
